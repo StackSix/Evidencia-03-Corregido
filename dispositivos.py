@@ -1,52 +1,74 @@
 # dispositivos.py
 
 # Diccionario para almacenar dispositivos
-import usuarios
+
 dispositivos = {}
 
-def registrar_dispositivos(nombre):
+def registrar_dispositivo(nombre_del_dispositivo, tipo_de_dispositivo, modelo, email_usuario):
     """
-    Registra un usuario nuevo en el diccionario 'usuarios'.
-    La clave será el email, que debe ser único.
+    Registra un dispositivo nuevo en el diccionario 'dispositivos'.
+    La clave será: nombre_del_dispositivo, que debe ser único.
+    El dispositivo se vincula al email de un usuario existente.
     """
-    if dispositivos in usuarios:
-        print("Error: Ya existe un usuario con ese email.")
+    if nombre_del_dispositivo in dispositivos:
+        print("Error: Ya existe un dispositivo con ese nombre.")
     else:
-        usuarios[email] = {
-            "nombre": nombre,
-            "contraseña": contraseña}
-        print(f"Usuario '{nombre}' registrado correctamente.")
+        dispositivos[nombre_del_dispositivo] = {
+            "tipo_de_dispositivo": tipo_de_dispositivo,
+            "modelo": modelo,
+            "propietario": email_usuario
+        }
+        print(f"Dispositivo '{nombre_del_dispositivo}' registrado correctamente.")
 
-def eliminar_usuario(email, contraseña):
+def eliminar_dispositivo(nombre_del_dispositivo, email_usuario):
     """
-    Elimina un usuario por su email si existe.
+    Elimina un dispositivo si existe y pertenece al usuario especificado.
     """
-    if email in usuarios:
-        nombre = usuarios.pop(email)
-        if contraseña in usuarios:
-            nombre = usuarios == (contraseña)
-            print(f"Usuario '{nombre}' eliminado correctamente.")
+    if nombre_del_dispositivo in dispositivos:
+        # Verificar que el dispositivo pertenezca al usuario
+        if dispositivos[nombre_del_dispositivo]["propietario"] == email_usuario:
+            dispositivos.pop(nombre_del_dispositivo)
+            print(f"Dispositivo '{nombre_del_dispositivo}' eliminado correctamente.")
         else:
-            print("La contraseña no es correcta")
+            print("Error: Este dispositivo no pertenece al usuario especificado.")
     else:
-        print("Error: No se encontró ningún usuario con ese email.")
+        print("Error: El dispositivo no existe.")
 
-def buscar_usuario(email):
+def buscar_dispositivo(nombre_del_dispositivo):
     """
-    Busca un usuario por su email.
+    Busca un dispositivo por su nombre.
     """
-    if email in usuarios:
-        print(f"Usuario encontrado: {usuarios[email]} ({email})")
+    if nombre_del_dispositivo in dispositivos:
+        info = dispositivos[nombre_del_dispositivo]
+        print(f"\nDispositivo encontrado:")
+        print(f"Nombre: {nombre_del_dispositivo}")
+        print(f"Tipo: {info['tipo_de_dispositivo']}")
+        print(f"Modelo: {info['modelo']}")
+        print(f"Propietario: {info['propietario']}")
     else:
-        print("No se encontró ningún usuario con ese email.")
+        print("No se encontró ningún dispositivo con ese nombre.")
 
-def listar_usuarios():
+def listar_dispositivos():
     """
-    Muestra todos los usuarios registrados.
+    Muestra todos los dispositivos registrados.
     """
-    if usuarios:
-        print("\nLista de usuarios:")
-        for email, nombre in usuarios.items():
-            print(f" - {nombre} ({email})")
+    if dispositivos:
+        print("\nLista de dispositivos:")
+        for nombre, info in dispositivos.items():
+            print(f" - {nombre} (Tipo: {info['tipo_de_dispositivo']}, Modelo: {info['modelo']}, Propietario: {info['propietario']})")
     else:
-        print("No hay usuarios registrados.")
+        print("No hay dispositivos registrados.")
+
+def listar_dispositivos_usuario(email_usuario):
+    """
+    Muestra todos los dispositivos registrados de un usuario específico.
+    """
+    dispositivos_usuario = {nombre: info for nombre, info in dispositivos.items() 
+                          if info["propietario"] == email_usuario}
+    
+    if dispositivos_usuario:
+        print(f"\nDispositivos registrados para el usuario {email_usuario}:")
+        for nombre, info in dispositivos_usuario.items():
+            print(f" - {nombre} (Tipo: {info['tipo_de_dispositivo']}, Modelo: {info['modelo']})")
+    else:
+        print(f"No hay dispositivos registrados para el usuario {email_usuario}.")
