@@ -6,7 +6,7 @@ Esta evidencia corresponde al segundo entregable del proyecto de Aprendizaje Bas
 
 Tambien corresponde a la entrega de la evidencia-03 con las correxiones pertinentes mencionadas en la devolucion
 
----
+
 ## 🧩 Objetivos
 
 - Implementar un sistema de gestión de dispositivos por usuario.
@@ -37,7 +37,7 @@ Tambien corresponde a la entrega de la evidencia-03 con las correxiones pertinen
 - ✅ Configuración interactiva de automatizaciones por parte del usuario.
 - ✅ Guardado y carga automática desde archivos `usuarios.json`, `dispositivos.json` y `automatizaciones.json`.
 
----
+
 ## ⚙️ Funcionalidades Principales
 
 - ✅ Registro de usuarios y dispositivos.
@@ -45,7 +45,7 @@ Tambien corresponde a la entrega de la evidencia-03 con las correxiones pertinen
 - ✅ Activación interactiva del modo ahorro por cámara.
 - ✅ Guardado y carga automática desde `usuarios.json` y `dispositivos.json`.
 
----
+
 
 ### Registro de dispositivo y activacion de automatizacion (modo de ahorro):
 ```bash
@@ -80,7 +80,7 @@ ABP2/
 └── README.md
 ```
 
----
+
 ## 🧪 Guía para Ejecutar la Aplicación desde Cero
 
 ### ✅ 1. Requisitos del sistema
@@ -157,7 +157,7 @@ No es necesario crear manualmente estos archivos.
 - Activar modo ahorro (respetando restricciones)
 - Activar modo nocturno (respetando exclusión con modo ahorro) (se agrego datetime para verificar superposicion de hora en automatizacion modo ahorro y activacion nocturna silenciosa.)
 
----
+
 
 ## 📄 Evidencia 03
 La parte escrita se puede descargar en formato PDF desde el siguiente Link:
