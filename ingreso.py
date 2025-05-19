@@ -2,7 +2,7 @@
 import usuarios
 
 def mostrar_menu_ingreso():
-    print("\n--- SISTEMA DE GESTIÓN - INGRESO ---")
+    print("\n--- INGRESO ---")
     print("1. Iniciar sesión")
     print("2. Registrar usuario")
     print("3. Salir")
@@ -37,7 +37,7 @@ def menu_ingreso():
         
         elif opcion == "3":
             # Salir
-            print("\n¡Gracias por usar nuestro Sistema de Gestión!")
+            print("Saliendo del sistema...")
             break
             
         else:
