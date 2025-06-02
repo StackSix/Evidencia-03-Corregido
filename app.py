@@ -1,9 +1,8 @@
-# main.py
-
-import ingreso
-import principal
-import usuarios
-import dispositivos_modulo as dispositivos
+from SRC.usuarios import usuarios
+from SRC.dispositivos import dispositivos_modulo as dispositivos
+from SRC.menus import ingreso
+import router
+from SRC.dispositivos import dispositivos_modulo as dispositivos
 
 
 def inicializar_sistema():

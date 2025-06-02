@@ -1,5 +1,5 @@
-# ingreso.py
-import usuarios
+from SRC.usuarios import usuarios
+import router
 
 def mostrar_menu_ingreso():
     print("\n--- INGRESO ---")
@@ -9,39 +9,44 @@ def mostrar_menu_ingreso():
     return input("Seleccione una opción: ")
 
 def menu_ingreso():
-    """Menú inicial de ingreso al sistema"""
     print("Bienvenido al Sistema de Gestión")
     
     while True:
         opcion = mostrar_menu_ingreso()
         
         if opcion == "1":
-            # Iniciar sesión
             print("\n--- INICIO DE SESIÓN ---")
             email = input("Email: ")
             contraseña = input("Contraseña: ")
             exito = usuarios.iniciar_sesion(email, contraseña)
             if exito:
                 print("Sesión iniciada correctamente.")
-                # Importamos principal aquí para evitar importaciones circulares
-                import principal
-                principal.menu_principal(email)
-        
+                router.menu_principal(email)
+                
         elif opcion == "2":
-            # Registrar usuario
             print("\n--- REGISTRO DE USUARIO ---")
             nombre = input("Nombre: ")
             email = input("Email: ")
             contraseña = input("Contraseña: ")
-            usuarios.registrar_usuario(nombre, email, contraseña)
-        
+
+            print("Seleccione tipo de usuario:")
+            print("1. Administrador")
+            print("2. Usuario estándar")
+            tipo_opcion = input("Ingrese opción (1-2): ")
+
+            if tipo_opcion == "1":
+                categoria = "administrador"
+            elif tipo_opcion == "2":
+                categoria = "usuario"
+            else:
+                print("Opción no válida. Se asignará usuario estándar por defecto.")
+                categoria = "usuario"
+
+            usuarios.registrar_usuario(nombre, email, contraseña, categoria)
+
         elif opcion == "3":
-            # Salir
-            print("Saliendo del sistema...")
+            print("👋 Saliendo del sistema...")
             break
-            
+
         else:
-            print("\nOpción no válida. Por favor, intente nuevamente.")
-        
-        # Pausa antes de volver al menú
-        input("\nPresione Enter para continuar...")
+            print("Opción no válida.")
