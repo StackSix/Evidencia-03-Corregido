@@ -1,6 +1,11 @@
 from SRC.dispositivos import dispositivos_modulo as dispositivos
 from SRC.usuarios import usuarios
 
+TIPOS_DISPOSITIVO = {
+    "1": "cámara de seguridad",
+    "2": "sensor de movimiento"
+}
+
 def mostrar_menu_dispositivos():
     print("\n--- SISTEMA DE GESTIÓN DE DISPOSITIVOS ---")
     print("1. Registrar dispositivo")
@@ -11,41 +16,48 @@ def mostrar_menu_dispositivos():
     print("6. Desactivar modo ahorro de cámaras")
     print("7. Modificar configuración de un dispositivo")
     print("8. Volver al menú anterior")
-    return input("Seleccione una opción: ")
+    return input("Seleccione una opción: ").strip()
 
 def menu_dispositivos(email_actual):
     while True:
         opcion = mostrar_menu_dispositivos()
 
         if opcion == "1":
-            nombre = input("Nombre del dispositivo: ")
+            nombre = input("Nombre del dispositivo: ").strip()
+            if not nombre:
+                print("❌ El nombre del dispositivo no puede estar vacío.")
+                continue
+
             print("1. Cámara de seguridad\n2. Sensor de movimiento")
-            tipo = input("Opción: ")
-            if tipo == "1":
-                tipo_disp = "cámara de seguridad"
-            elif tipo == "2":
-                tipo_disp = "sensor de movimiento"
-            else:
+            tipo = input("Opción: ").strip()
+
+            tipo_disp = TIPOS_DISPOSITIVO.get(tipo)
+            if not tipo_disp:
                 print("❌ Tipo inválido.")
                 continue
-            modelo = input("Modelo del dispositivo: ")
+
+            modelo = input("Modelo del dispositivo: ").strip()
             dispositivos.registrar_dispositivo(nombre, tipo_disp, modelo, email_actual)
 
         elif opcion == "2":
-            nombre = input("Nombre del dispositivo a eliminar: ")
-            contraseña = input("Confirmar contraseña: ")
+            if usuarios.usuario[email_actual]["categoria"] != "administrador":
+                print("❌ Solo el administrador puede eliminar dispositivos.")
+                continue
+
+            nombre = input("Nombre del dispositivo a eliminar: ").strip()
+            contraseña = input("Confirmar contraseña: ").strip()
             if usuarios.verificar_credenciales(email_actual, contraseña):
                 dispositivos.eliminar_dispositivo(nombre, email_actual)
             else:
                 print("❌ Contraseña incorrecta.")
 
         elif opcion == "3":
-            nombre = input("Nombre del dispositivo a buscar: ")
+            nombre = input("Nombre del dispositivo a buscar: ").strip()
             dispositivos.buscar_dispositivo(nombre)
 
         elif opcion == "4":
             print("1. Todos los dispositivos\n2. Solo mis dispositivos")
-            sub = input("Opción: ")
+            sub = input("Opción: ").strip()
             if sub == "1":
                 dispositivos.listar_dispositivos()
             elif sub == "2":
@@ -70,5 +82,3 @@ def menu_dispositivos(email_actual):
             print("❌ Opción inválida.")
 
         input("\nPresione Enter para continuar...")
-
-

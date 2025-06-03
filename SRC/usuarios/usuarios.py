@@ -2,21 +2,11 @@ import json
 import os
 import re
 
-#En este modulo esta lo siguiente:
-# - Cargar y guardar usuarios desde un archivo JSON
-# - Verificar credenciales de usuario
-# - Iniciar sesión
-# - Registrar nuevos usuarios con validaciones nuevas
-# - Cambiar contraseña de usuario
-
-
 usuario = {}
 
 USUARIOS = os.path.join("data", "usuarios.json")
 
-
 # ------------------------------------------
-
 def cargar_usuarios():
     global usuario
     if os.path.exists(USUARIOS):
@@ -26,74 +16,58 @@ def cargar_usuarios():
         usuario = {}
 
 # ------------------------------------------
-
 def guardar_usuarios():
     with open(USUARIOS, "w") as archivo:
         json.dump(usuario, archivo, indent=4)
 
-
 # ------------------------------------------
-
 def verificar_credenciales(email, contraseña):
     return email in usuario and usuario[email]["contraseña"] == contraseña
 
-
 # ------------------------------------------
-
 def iniciar_sesion(email, contraseña):
     if email in usuario:
         if usuario[email]["contraseña"] == contraseña:
             nombre = usuario[email]["nombre"]
             categoria = usuario[email]["categoria"]
             print(f"Bienvenido, {nombre}! Rol: {categoria}")
-            return categoria  # 🔧 Retorna la categoría
+            return categoria
         else:
             print("❌ Error: Contraseña incorrecta.")
     else:
         print("❌ Error: No existe ningún usuario con ese email.")
     return False
 
- # funcion de registro de usuario modificada con atributo categoria de usuario y mejora en validaciones de registro
-def registrar_usuario(nombre, email, contraseña, categoria):
+# ------------------------------------------
+def registrar_usuario(nombre, email, contraseña, categoria="usuario"):
     categoria = categoria.lower()
-    if categoria not in ["administrador", "usuario"]:
-        print("❌ Error: Categoría inválida. Debe ser 'administrador' o 'usuario'.")
+    if categoria not in ["usuario", "administrador"]:
+        print("❌ Error: Categoría inválida. Debe ser 'usuario' o 'administrador'.")
         return
 
-    # Validar formato email
-    patron_email = r'^[\w\.-]+@[\w\.-]+\.\w+$'  # ejemplo: abc@gmail.com
+    patron_email = r'^[\w\.-]+@[\w\.-]+\.\w+$'
     if not re.match(patron_email, email):
-        print("❌ Error: Email inválido, debe ser abcd@gmail.com por ejemplo.")
-        return
-    
-    # Exigir mínimo 8 caracteres en contraseña
-    if len(contraseña) <= 8:
-        print("❌ Error: La contraseña debe tener más de 8 caracteres.")
-        return
-    
-    # Validar que la contraseña tenga mayúscula, número y carácter especial
-    patron_contraseña = r'^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+=\[\]{};:\'",.<>?/\\|]).+$'
-    if not re.match(patron_contraseña, contraseña):
-        print("❌ Error: La contraseña debe contener al menos una letra mayúscula, un número y un carácter especial.")
+        print("❌ Error: Email inválido. Debe tener formato como ejemplo@gmail.com.")
         return
 
-    # Normalizar nombre a minúsculas para evitar errores en la base de datos
-    nombre = nombre.lower()
+    patron_contraseña = r'^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+=\[\]{};:"\',.<>?/\\|]).+$'
+    if not re.match(patron_contraseña, contraseña) or len(contraseña) < 8 or " " in contraseña:
+        print("❌ Contraseña insegura. Debe tener al menos 8 caracteres, incluir una mayúscula, un número, un símbolo y no contener espacios.")
+        return
 
     if email in usuario:
-        print("❌ Error: Ya existe un usuario con ese email.")
-    else:
-        usuario[email] = {
-            "nombre": nombre,
-            "contraseña": contraseña,
-            "categoria": categoria
-        }
-        print(f"✅ Usuario '{nombre}' registrado correctamente como {categoria}.")
-        guardar_usuarios()
+        print("❌ Ya existe un usuario con ese email.")
+        return
 
-   
+    usuario[email] = {
+        "nombre": nombre.lower(),
+        "contraseña": contraseña,
+        "categoria": categoria
+    }
+    guardar_usuarios()
+    print(f"✅ Usuario '{nombre}' registrado exitosamente como '{categoria}'.")
+
 # ------------------------------------------
-
 def cambiar_contraseña(email, nueva_contraseña):
     if email in usuario:
         usuario[email]["contraseña"] = nueva_contraseña
@@ -103,8 +77,6 @@ def cambiar_contraseña(email, nueva_contraseña):
         print("❌ Error: No se encontró ningún usuario con ese email.")
 
 # ------------------------------------------
-
-
 def buscar_usuario(email):
     if email in usuario:
         datos = usuario[email]
@@ -112,10 +84,7 @@ def buscar_usuario(email):
     else:
         print("❌ No se encontró ningún usuario con ese email.")
 
-
-
-
-
+# ------------------------------------------
 def eliminar_usuario(email, contraseña):
     if email in usuario:
         if usuario[email]["contraseña"] == contraseña:
@@ -130,12 +99,7 @@ def eliminar_usuario(email, contraseña):
         print("❌ Error: No se encontró ningún usuario con ese email.")
     return False
 
-
-
-
-
-
-
+# ------------------------------------------
 def listar_usuarios():
     if usuario:
         print("\n📋 Lista de usuarios:")
@@ -143,3 +107,22 @@ def listar_usuarios():
             print(f" - {datos['nombre']} ({email}) - Rol: {datos['categoria']}")
     else:
         print("ℹ️ No hay usuarios registrados.")
+
+# ------------------------------------------
+def crear_administrador():
+    print("\n--- REGISTRO DEL ADMINISTRADOR ---")
+    nombre = input("Nombre: ")
+    email = input("Email: ")
+    contraseña = input("Contraseña: ")
+
+    for datos in usuario.values():
+        if datos["categoria"] == "administrador":
+            print("❌ Ya existe un administrador registrado.")
+            return
+
+    registrar_usuario(nombre, email, contraseña, categoria="administrador")
+
+# ------------------------------------------
+if __name__ == "__main__":
+    cargar_usuarios()
+    crear_administrador()

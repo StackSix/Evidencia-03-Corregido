@@ -1,7 +1,3 @@
-from SRC.usuarios import usuarios
-from SRC.dispositivos import dispositivos_modulo as dispositivos
-import time
-
 def menu_usuario(email_actual):
     nombre_usuario = usuarios.usuario[email_actual]["nombre"]
 
@@ -16,21 +12,16 @@ def menu_usuario(email_actual):
         opcion = input("Seleccione una opción: ")
 
         if opcion == "1":
-            print(f"🔍 Usuario encontrado: {nombre_usuario} ({email_actual}) - Rol: usuario")
-
+            usuarios.buscar_usuario(email_actual)
         elif opcion == "2":
-            print("🔧 Automatización ejecutada (simulada).")
-
+            dispositivos.consultar_automatizaciones_activas()  # o ejecuta alguna simulación
         elif opcion == "3":
             dispositivos.listar_dispositivos_usuario(email_actual)
-
         elif opcion == "4":
             dispositivos.modificar_configuracion_dispositivo(email_actual)
-
         elif opcion == "5":
             print("👋 Cerrando sesión...")
             break
-
         else:
             print("❌ Opción inválida.")
 
