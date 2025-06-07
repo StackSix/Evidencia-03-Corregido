@@ -72,9 +72,9 @@ def registrar_usuario(nombre, email, contraseña, categoria):
         return
     
     # Validar que la contraseña tenga mayúscula, número y carácter especial
-    patron_contraseña = r'^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+=\[\]{};:\'",.<>?/\\|]).+$'
+    patron_contraseña = r'^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+=\[\]{};:\'",.<>?/\\|])\S+$'
     if not re.match(patron_contraseña, contraseña):
-        print("❌ Error: La contraseña debe contener al menos una letra mayúscula, un número y un carácter especial.")
+        print("❌ Error: La contraseña debe contener al menos una letra mayúscula, un número, un carácter especial y no debe incluir espacios en blanco.")
         return
 
     # Normalizar nombre a minúsculas para evitar errores en la base de datos
