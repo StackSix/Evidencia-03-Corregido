@@ -1,12 +1,12 @@
 {
+    "admin@gmail.com": {
+        "nombre": "admin",
+        "contrasena": "Admin1234.",
+        "rol": "administrador"
+    },
     "daniel@gmail.com": {
         "nombre": "daniel",
-        "contrase\u00f1a": "Dani1234.",
-        "categoria": "usuario"
-    },
-    "danielgonzalez@gmail.com": {
-        "nombre": "daniel-gonzalez",
-        "contrase\u00f1a": "Dani1234.",
-        "categoria": "administrador"
+        "contrasena": "Daniel1234.",
+        "rol": "usuario"
     }
 }

@@ -1,75 +1,123 @@
-from SRC.dispositivos.menu_dispositivos import menu_dispositivos
-from SRC.dispositivos import dispositivos_modulo as dispositivos
-from SRC.usuarios import usuarios
+from SRC.dispositivos.dispositivos import (
+    mostrar_dispositivos,
+    agregar_dispositivo,
+    eliminar_dispositivo,
+    modificar_dispositivo
+)
+from SRC.automatizaciones.automatizaciones import (
+    mostrar_automatizaciones_activas,
+    configurar_automatizacion
+)
+from SRC.usuarios.usuarios import (
+    registrar_usuario,
+    login,
+    obtener_rol,
+    modificar_rol
+)
 
 
-def menu_usuario(email_usuario):
-    nombre_usuario = usuarios.usuario[email_usuario]["nombre"]
+def mostrar_datos_usuario(email):
+    print(f"\n📧 Email: {email}")
+    print(f"🔐 Rol: {obtener_rol(email)}")
 
+
+def menu_usuario(email):
     while True:
-        print(f"\n--- MENÚ USUARIO - Bienvenido {nombre_usuario} ---")
-        print("1. Consultar mis datos personales")
-        print("2. Consultar automatizaciones activas")
-        print("3. Consultar mis dispositivos")
-        print("4. Modificar configuración de mis dispositivos")
-        print("5. Cerrar sesión")
-
+        print(f"\n--- MENÚ USUARIO - Bienvenido {email} ---")
+        print("1. Ver mis datos")
+        print("2. Configurar automatización")
+        print("3. Ver dispositivos")
+        print("4. Cerrar sesión")
         opcion = input("Seleccione una opción: ")
 
         if opcion == "1":
-            usuarios.buscar_usuario(email_usuario)
+            mostrar_datos_usuario(email)
         elif opcion == "2":
-            dispositivos.consultar_automatizaciones_activas()
+            configurar_automatizacion(email)
         elif opcion == "3":
-            dispositivos.listar_dispositivos_usuario(email_usuario)
+            mostrar_dispositivos(email)
         elif opcion == "4":
-            dispositivos.modificar_configuracion_dispositivo(email_usuario)
-        elif opcion == "5":
-            print("👋 Sesión cerrada.")
-            return
+            print("\n👋 Sesión finalizada.")
+            break
         else:
             print("❌ Opción inválida.")
 
-        input("\nPresione Enter para continuar...")
 
-
-def menu_admin(email_admin):
-    """Menú exclusivo para vos (el administrador del sistema)"""
-    nombre_usuario = usuarios.usuario[email_admin]["nombre"]
-
+def menu_admin(email):
     while True:
-        print(f"\n--- MENÚ ADMINISTRADOR - Bienvenido {nombre_usuario} ---")
-        print("1. Consultar automatizaciones activas")
-        print("2. Gestión de dispositivos")
-        print("3. Consultar mis dispositivos")
-        print("4. Modificar configuración de mis dispositivos")
-        print("5. Cerrar sesión")
-
+        print(f"\n--- MENÚ ADMINISTRADOR - Bienvenido {email} ---")
+        print("1. Ver automatizaciones activas")
+        print("2. Gestionar dispositivos")
+        print("3. Modificar rol de usuario")
+        print("4. Cerrar sesión")
         opcion = input("Seleccione una opción: ")
 
         if opcion == "1":
-            dispositivos.consultar_automatizaciones_activas()
+            mostrar_automatizaciones_activas()
         elif opcion == "2":
-            menu_dispositivos(email_admin)
+            usuario = input("Email del usuario: ").strip()
+            if not usuario:
+                print("❌ Email no puede estar vacío.")
+                continue
+
+            print("\n--- Gestión de dispositivos ---")
+            print("1. Agregar dispositivo")
+            print("2. Eliminar dispositivo")
+            print("3. Modificar dispositivo")
+            opcion_sub = input("Seleccione una opción: ")
+
+            if opcion_sub == "1":
+                agregar_dispositivo(usuario)
+            elif opcion_sub == "2":
+                eliminar_dispositivo(usuario)
+            elif opcion_sub == "3":
+                modificar_dispositivo(usuario)
+            else:
+                print("❌ Opción inválida.")
         elif opcion == "3":
-            dispositivos.listar_dispositivos_usuario(email_admin)
+            objetivo = input("Email del usuario a modificar: ")
+            nuevo_rol = input("Nuevo rol (usuario/administrador): ")
+            modificar_rol(objetivo, nuevo_rol, email)
         elif opcion == "4":
-            dispositivos.modificar_configuracion_dispositivo(email_admin)
-        elif opcion == "5":
-            print("👋 Volviendo al menú de ingreso...")
-            return
+            print("\n👋 Sesión finalizada.")
+            break
         else:
             print("❌ Opción inválida.")
 
-        input("\nPresione Enter para continuar...")
+
+def menu_ingreso():
+    while True:
+        print("\n--- MENÚ INICIAL ---")
+        print("1. Iniciar sesión")
+        print("2. Registrarse")
+        print("3. Salir")
+        opcion = input("Seleccione una opción: ")
+
+        if opcion == "1":
+            email = input("Email: ")
+            contraseña = input("Contraseña: ")
+            usuario = login(email, contraseña)
+            if usuario:
+                if usuario["rol"] == "usuario":
+                    menu_usuario(email)
+                elif usuario["rol"] == "administrador":
+                    menu_admin(email)
+            else:
+                print("❌ Credenciales incorrectas.")
+
+        elif opcion == "2":
+            nombre = input("Nombre: ")
+            email = input("Email: ")
+            contraseña = input("Contraseña: ")
+            categoria = input("Categoría (usuario/administrador): ").lower()
+            registrar_usuario(nombre, email, contraseña, categoria)
+
+        elif opcion == "3":
+            print("\nGracias por usar el sistema.")
+            break
+        else:
+            print("❌ Opción inválida.")
 
 
-def menu_principal(email_usuario):
-    """Redirige al menú según el tipo de usuario"""
-    datos_usuario = usuarios.usuario[email_usuario]
-    rol = datos_usuario["categoria"]
-
-    if rol == "administrador":
-        menu_admin(email_usuario)
-    else:
-        menu_usuario(email_usuario)
+if __name__ == "__main__":
+    menu_ingreso()
