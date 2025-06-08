@@ -4,7 +4,6 @@ import re
 RUTA_USUARIOS = os.path.join("data", "usuarios.json")
 usuarios = {}
 
-# Cargar usuarios desde archivo
 
 def cargar_usuarios():
     global usuarios
@@ -14,13 +13,10 @@ def cargar_usuarios():
     else:
         usuarios = {}
 
-# Guardar usuarios en archivo
-
 def guardar_usuarios():
     with open(RUTA_USUARIOS, "w") as f:
         json.dump(usuarios, f, indent=4)
 
-# Registrar usuario estándar o administrador (si no existe aún)
 
 def registrar_usuario(nombre, email, contrasena, rol="usuario"):
     cargar_usuarios()
@@ -63,7 +59,6 @@ def registrar_usuario(nombre, email, contrasena, rol="usuario"):
     guardar_usuarios()
     print(f"✅ Usuario '{nombre}' registrado como {rol}.")
 
-# Autenticación
 
 def login(email, contrasena):
     cargar_usuarios()
@@ -71,12 +66,10 @@ def login(email, contrasena):
         return usuarios[email]
     return None
 
-# Obtener rol
 
 def obtener_rol(email):
     return usuarios.get(email, {}).get("rol", "usuario")
 
-# Modificar rol (solo admin)
 
 def modificar_rol(email_objetivo, nuevo_rol, email_actual):
     if usuarios.get(email_actual, {}).get("rol") != "administrador":
@@ -88,7 +81,6 @@ def modificar_rol(email_objetivo, nuevo_rol, email_actual):
     usuarios[email_objetivo]["rol"] = nuevo_rol
     guardar_usuarios()
     print(f"✅ Rol de {email_objetivo} cambiado a {nuevo_rol}.")
-
 
 
 
@@ -121,7 +113,7 @@ def registrar_admin_unico():
         elif " " in contrasena:
             print("❌ No debe contener espacios.")
         else:
-            break  # Contraseña válida
+            break 
 
         intentos += 1
         if intentos == 2:

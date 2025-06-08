@@ -44,7 +44,7 @@ def registrar_dispositivo(nombre, modelo, email):
 
     guardar_dispositivos()
 
-    # ✅ Crear automatización por defecto
+
     crear_automatizacion_por_defecto(email, nombre)
 
     print(f"✅ Dispositivo '{nombre}' agregado correctamente.")
