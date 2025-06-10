@@ -161,6 +161,6 @@ No es necesario crear manualmente estos archivos.
 
 ## 📄 Evidencia 03
 La parte escrita se puede descargar en formato PDF desde el siguiente Link:
-[📎 Evidencia PDF](https://docs.google.com/document/d/1MfBbVSplI38Zddhke6aVuCkn7smL8tuLII73r_SKg7E/edit?usp=sharing)
+[📎 Evidencia PDF](https://drive.google.com/file/d/1K-0RIFLDK6z60dtBWyPIVVxLaynjjlXH/view?usp=sharing)
 
 También se adjuntó el archivo PDF en la entrega a través del aula virtual.
