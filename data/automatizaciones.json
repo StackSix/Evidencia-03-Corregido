@@ -1,15 +1,13 @@
 {
-    "daniel@gmail.com": {
-        "camara-living": {
+    "dani@gmail.com": {
+        "camara-patio": {
             "encendido": true,
             "grabacion_modo": "movimiento",
             "programacion_horaria": {
-                "activo": true,
-                "encendido": "20:00",
-                "apagado": "08:00"
+                "activo": false
             },
             "notificaciones": true,
-            "deteccion_movimiento": false,
+            "deteccion_movimiento": true,
             "modo_ahorro": false,
             "activacion_nocturna_silenciosa": false
         }

@@ -4,9 +4,9 @@
         "contrasena": "Admin1234.",
         "rol": "administrador"
     },
-    "daniel@gmail.com": {
-        "nombre": "daniel",
-        "contrasena": "Daniel1234.",
+    "dani@gmail.com": {
+        "nombre": "dani",
+        "contrasena": "Dani1234.",
         "rol": "usuario"
     }
 }

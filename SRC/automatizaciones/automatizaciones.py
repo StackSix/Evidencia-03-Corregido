@@ -1,8 +1,33 @@
 import json
 import os
-
+from datetime import datetime
 RUTA = os.path.join("data", "automatizaciones.json")
 automatizaciones = {}
+
+def validar_dependencias(datos):
+    if not datos["encendido"]:
+        datos["grabacion_modo"] = "movimiento"
+        datos["programacion_horaria"] = {"activo": False}
+        datos["notificaciones"] = False
+        datos["deteccion_movimiento"] = False
+        datos["modo_ahorro"] = False
+        datos["activacion_nocturna_silenciosa"] = False
+        return
+
+    if not datos["deteccion_movimiento"]:
+        datos["notificaciones"] = False
+        datos["modo_ahorro"] = False
+
+    if not datos["notificaciones"]:
+        datos["modo_ahorro"] = False
+
+    if datos["modo_ahorro"]:
+        datos["activacion_nocturna_silenciosa"] = False
+
+    if isinstance(datos["activacion_nocturna_silenciosa"], dict):
+        if not datos["activacion_nocturna_silenciosa"].get("activo", False):
+            datos["activacion_nocturna_silenciosa"] = False
+
 
 def cargar_automatizaciones():
     global automatizaciones
@@ -52,8 +77,13 @@ def modificar_automatizacion(email, dispositivo):
             modo = input("Ingrese 'siempre' o 'movimiento': ").lower()
             if modo in ["siempre", "movimiento"]:
                 datos["grabacion_modo"] = modo
+            else:
+                print("❌ Modo inválido.")
 
         elif opcion == "3":
+            if not datos["encendido"]:
+                print("⚠️ El dispositivo debe estar encendido.")
+                continue
             activar = input("¿Desea activar la programación horaria? (s/n): ").lower()
             if activar == "s":
                 on = input("Horario de encendido (HH:MM): ")
@@ -67,37 +97,73 @@ def modificar_automatizacion(email, dispositivo):
                 datos["programacion_horaria"] = {"activo": False}
 
         elif opcion == "4":
-            if not datos["encendido"] or not datos["deteccion_movimiento"]:
-                print("⚠️ Requiere detección de movimiento y estar encendido.")
+            if not datos["encendido"]:
+                print("⚠️ El dispositivo debe estar encendido.")
                 continue
+            if not datos["deteccion_movimiento"]:
+                print("⚠️ No se puede activar notificaciones sin detección de movimiento.")
+                continuar = input("¿Deseás activar detección de movimiento ahora? (s/n): ").lower()
+                if continuar == "s":
+                    datos["deteccion_movimiento"] = True
+                else:
+                    continue
             datos["notificaciones"] = not datos["notificaciones"]
 
         elif opcion == "5":
             if not datos["encendido"]:
                 print("⚠️ El dispositivo debe estar encendido.")
                 continue
+            if datos["grabacion_modo"] == "movimiento" and datos["deteccion_movimiento"]:
+                confirmar = input("⚠️ Estás usando grabación por movimiento. ¿Deseás cambiar a 'siempre' antes de desactivar la detección? (s/n): ").lower()
+                if confirmar == "s":
+                    datos["grabacion_modo"] = "siempre"
+                else:
+                    continue
             datos["deteccion_movimiento"] = not datos["deteccion_movimiento"]
 
         elif opcion == "6":
-            if not datos["deteccion_movimiento"] or not datos["notificaciones"]:
-                print("⚠️ Requiere detección y notificaciones activas.")
+            if not datos["encendido"]:
+                print("⚠️ El dispositivo debe estar encendido.")
                 continue
+            if not datos["deteccion_movimiento"] or not datos["notificaciones"]:
+                print("⚠️ Requiere detección de movimiento y notificaciones activas.")
+                activar = input("¿Deseás activarlas ahora? (s/n): ").lower()
+                if activar == "s":
+                    datos["deteccion_movimiento"] = True
+                    datos["notificaciones"] = True
+                else:
+                    continue
+
+            if esta_en_horario_nocturno(datos.get("activacion_nocturna_silenciosa", False)):
+                print("⚠️ No se puede activar modo ahorro porque ya está activo el modo nocturno silencioso.")
+                continue
+
             datos["modo_ahorro"] = not datos["modo_ahorro"]
 
         elif opcion == "7":
-            if not datos["encendido"] or datos.get("modo_ahorro"):
-                print("⚠️ No puede estar en modo ahorro y debe estar encendido.")
+            if not datos["encendido"]:
+                print("⚠️ El dispositivo debe estar encendido.")
                 continue
-            datos["activacion_nocturna_silenciosa"] = not datos.get("activacion_nocturna_silenciosa", False)
+            if datos["modo_ahorro"]:
+                print("⚠️ No puede activarse junto al modo ahorro.")
+                continue
+            configurar = input("¿Deseás configurar un horario nocturno silencioso? (s/n): ").lower()
+            if configurar == "s":
+                desde = input("Hora de inicio silencioso (HH:MM): ")
+                hasta = input("Hora de fin silencioso (HH:MM): ")
+                datos["activacion_nocturna_silenciosa"] = {
+                    "activo": True,
+                    "desde": desde,
+                    "hasta": hasta
+                }
 
-        elif opcion == "8":
-            break
-        else:
-            print("❌ Opción inválida.")
+                # Verificamos si ya está en horario y hay conflicto con modo ahorro
+                if datos["modo_ahorro"] and esta_en_horario_nocturno(datos["activacion_nocturna_silenciosa"]):
+                    print("⚠️ Hay conflicto con el modo ahorro activo. Desactivándolo.")
+                    datos["modo_ahorro"] = False
 
-    guardar_automatizaciones()
-    print("✅ Automatización actualizada correctamente.")
-
+            else:
+                datos["activacion_nocturna_silenciosa"] = False
 
 def mostrar_automatizaciones_activas():
     cargar_automatizaciones()
@@ -150,4 +216,47 @@ def crear_automatizacion_por_defecto(email, nombre_disp):
         "activacion_nocturna_silenciosa": False
     }
 
+
+
     guardar_automatizaciones()
+
+def validar_dependencias(datos):
+    # Si encendido está apagado, muchas funciones no deben estar activas
+    if not datos["encendido"]:
+        datos["grabacion_modo"] = "movimiento"
+        datos["programacion_horaria"]["activo"] = False
+        datos["notificaciones"] = False
+        datos["deteccion_movimiento"] = False
+        datos["modo_ahorro"] = False
+        datos["activacion_nocturna_silenciosa"] = False
+
+    # Si detección de movimiento está apagada, se apagan notificaciones y ahorro
+    if not datos["deteccion_movimiento"]:
+        datos["notificaciones"] = False
+        datos["modo_ahorro"] = False
+
+    # Si notificaciones están apagadas, se apaga modo ahorro
+    if not datos["notificaciones"]:
+        datos["modo_ahorro"] = False
+
+    # Si modo ahorro está activo, no puede haber activación nocturna
+    if datos["modo_ahorro"]:
+        datos["activacion_nocturna_silenciosa"] = False    
+
+
+def esta_en_horario_nocturno(silencioso):
+    if not isinstance(silencioso, dict) or not silencioso.get("activo"):
+        return False
+
+    ahora = datetime.now().strftime("%H:%M")
+    desde = silencioso.get("desde")
+    hasta = silencioso.get("hasta")
+
+    if not desde or not hasta:
+        return False
+
+    # Caso donde el rango es, por ejemplo, 22:00 a 07:00 (pasa medianoche)
+    if desde > hasta:
+        return ahora >= desde or ahora <= hasta
+    else:
+        return desde <= ahora <= hasta
