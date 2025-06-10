@@ -58,10 +58,11 @@ Seleccione el dispositivo:
 Seleccione una opción de automatización:
 6. Modo ahorro
 ✅ Automatización actualizada correctamente.
-
+```
 
 ### Estructura del proyecto:
 
+```
 ABP2/
 ├── data/
 │   ├── usuarios.json
@@ -77,8 +78,89 @@ ABP2/
 ├── router.py
 ├── app.py
 └── README.md
+```
 
+---
+## 🧪 Guía para Ejecutar la Aplicación desde Cero
 
-Evidencia 03
+### ✅ 1. Requisitos del sistema
+
+- Python 3.10 o superior
+- Sistema operativo: Windows, Linux o MacOS
+- Editor de texto (opcional): VS Code, Sublime Text, etc.
+
+### 📁 2. Estructura esperada del proyecto
+
+```
+ABP2/
+├── SRC/
+│   ├── usuarios.py
+│   ├── router.py
+│   ├── dispositivos/
+│   │   ├── dispositivos_modulo.py
+│   │   ├── automatizaciones.py
+├── data/             # Carpeta creada pero vacia, aca se crearan automaticamente los archivos JSON
+├── principal.py
+└── README.md
+```
+
+### ▶️ 3. Como ejecutar el programa
+
+Desde la terminal o consola:
+```bash
+cd ABP2
+python app.py
+```
+
+### 🧑‍💻 4. Primer uso - Registro del Administrador
+
+- Se solicita automáticamente registrar al **primer usuario administrador** y se creara archivo usuarios.JSON.
+
+#### Validaciones del registro:
+- Email válido
+- Contraseña con mínimo 8 caracteres, al menos una mayúscula, un símbolo y sin espacios
+
+### 🔑 5. Iniciar sesión
+
+Después del registro:
+- Iniciar sesión como administrador
+- Registrar usuarios estándar
+
+### 🧭 6. Funcionalidades para probar
+
+#### Como Administrador:
+- Consultar automatizaciones activas de todos los usuarios
+- Agregar/modificar/eliminar dispositivos
+- Configurar automatizaciones avanzadas (modo ahorro, programación horaria, etc.)
+
+#### Como Usuario Estándar:
+- Ver sus dispositivos
+- Configurar reglas de automatización
+- Activar modo ahorro o activar modo nocturno
+
+### 💾 7. Archivos creados automáticamente
+
+El sistema genera automáticamente:
+```
+data/
+├── usuarios.json
+├── dispositivos.json
+├── automatizaciones.json
+```
+No es necesario crear manualmente estos archivos.
+
+### ✅ 8. Pruebas recomendadas
+
+- Registrar dispositivo
+- Configurar modo de grabación
+- Programar horarios
+- Activar modo ahorro (respetando restricciones)
+- Activar modo nocturno (respetando exclusión con modo ahorro) (se agrego datetime para verificar superposicion de hora en automatizacion modo ahorro y activacion nocturna silenciosa.)
+
+---
+
+## 📄 Evidencia 03
 La parte escrita se puede descargar en formato PDF desde el siguiente Link:
-https: (aun por definir)
+[📎 Evidencia PDF](https://docs.google.com/document/d/1MfBbVSplI38Zddhke6aVuCkn7smL8tuLII73r_SKg7E/edit?usp=sharing)
+
+También se adjuntó el archivo PDF en la entrega a través del aula virtual.
