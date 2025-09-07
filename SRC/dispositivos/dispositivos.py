@@ -3,7 +3,8 @@ from SRC.automatizaciones.automatizaciones import crear_automatizacion_por_defec
 import json
 import os
 
-RUTA = os.path.join("data", "dispositivos.json")
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+RUTA = os.path.join(BASE_DIR, "data", "dispositivos.json")
 dispositivos = {}
 
 def cargar_dispositivos():
@@ -15,6 +16,7 @@ def cargar_dispositivos():
         dispositivos = {}
 
 def guardar_dispositivos():
+    os.makedirs(os.path.dirname(RUTA), exist_ok=True)
     with open(RUTA, "w") as f:
         json.dump(dispositivos, f, indent=4)
 
@@ -25,30 +27,6 @@ def listar_dispositivos_usuario(email):
             print(f"- {nombre} ({info['modelo']}) - Estado: {info['estado']}")
     else:
         print("⚠️ No hay dispositivos registrados.")
-
-def registrar_dispositivo(nombre, modelo, email):
-    cargar_dispositivos()
-
-    if email not in dispositivos:
-        dispositivos[email] = {}
-
-    if nombre in dispositivos[email]:
-        print("❌ Ya existe un dispositivo con ese nombre.")
-        return
-
-    dispositivos[email][nombre] = {
-        "tipo": "cámara de seguridad",
-        "modelo": modelo,
-        "estado": "encendido"
-    }
-
-    guardar_dispositivos()
-
-
-    crear_automatizacion_por_defecto(email, nombre)
-
-    print(f"✅ Dispositivo '{nombre}' agregado correctamente.")
-
 
 def mostrar_dispositivos(email):
     cargar_dispositivos()
