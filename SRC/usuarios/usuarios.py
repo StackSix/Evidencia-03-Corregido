@@ -1,19 +1,23 @@
 import json
 import os
 import re
-RUTA_USUARIOS = os.path.join("data", "usuarios.json")
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+RUTA_USUARIOS = os.path.join(BASE_DIR, "data", "usuarios.json")
 usuarios = {}
 
 
 def cargar_usuarios():
-    global usuarios
+    global usuario
     if os.path.exists(RUTA_USUARIOS):
-        with open(RUTA_USUARIOS, "r") as f:
-            usuarios = json.load(f)
+        with open(RUTA_USUARIOS, "r") as archivo:
+            usuario = json.load(archivo)
     else:
-        usuarios = {}
+        usuario = {}
+
 
 def guardar_usuarios():
+    os.makedirs(os.path.dirname(RUTA_USUARIOS), exist_ok=True)
     with open(RUTA_USUARIOS, "w") as f:
         json.dump(usuarios, f, indent=4)
 
@@ -22,6 +26,7 @@ def registrar_usuario(nombre, email, contrasena, rol="usuario"):
     cargar_usuarios()
 
     # Validar formato de email
+    email = email.strip().lower()
     patron_email = r'^[\w\.-]+@[\w\.-]+\.\w+$'
     if not re.match(patron_email, email):
         print("❌ Email inválido. Debe tener formato nombre@dominio.com")
@@ -70,7 +75,6 @@ def login(email, contrasena):
 def obtener_rol(email):
     return usuarios.get(email, {}).get("rol", "usuario")
 
-
 def modificar_rol(email_objetivo, nuevo_rol, email_actual):
     if usuarios.get(email_actual, {}).get("rol") != "administrador":
         print("❌ Solo el administrador puede cambiar roles.")
@@ -81,7 +85,6 @@ def modificar_rol(email_objetivo, nuevo_rol, email_actual):
     usuarios[email_objetivo]["rol"] = nuevo_rol
     guardar_usuarios()
     print(f"✅ Rol de {email_objetivo} cambiado a {nuevo_rol}.")
-
 
 
 def registrar_admin_unico():
@@ -101,7 +104,13 @@ def registrar_admin_unico():
         return
 
     intentos = 0
-    while intentos < 2:
+    print("🔑 Crea tu contraseña siguiendo estas reglas:")
+    print(" - Al menos 8 caracteres")
+    print(" - Al menos una letra mayúscula")
+    print(" - Al menos un carácter especial (!@#$%...)")
+    print(" - No debe contener espacios\n")
+    
+    while intentos < 3:
         contrasena = input("Contraseña: ").strip()
 
         if len(contrasena) < 8:
@@ -113,18 +122,19 @@ def registrar_admin_unico():
         elif " " in contrasena:
             print("❌ No debe contener espacios.")
         else:
-            break 
+            break
 
         intentos += 1
-        if intentos == 2:
+        if intentos == 3:
             print("❌ Demasiados intentos fallidos. Registro cancelado.")
             return
-
-    usuarios[email] = {
-        "nombre": nombre,
-        "contrasena": contrasena,
-        "rol": "administrador"
-    }
-
-    guardar_usuarios()
-    print(f"✅ Administrador '{nombre}' registrado correctamente.")
+        
+        usuarios[email] = {
+            "nombre": nombre,
+            "contrasena": contrasena,
+            "rol": "administrador"
+            }
+        
+        guardar_usuarios()
+        print(f"✅ Administrador '{nombre}' registrado correctamente.")
+        
