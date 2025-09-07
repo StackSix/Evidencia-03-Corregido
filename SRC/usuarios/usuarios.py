@@ -129,12 +129,12 @@ def registrar_admin_unico():
             print("❌ Demasiados intentos fallidos. Registro cancelado.")
             return
         
-        usuarios[email] = {
-            "nombre": nombre,
-            "contrasena": contrasena,
-            "rol": "administrador"
-            }
+    usuarios[email] = {
+        "nombre": nombre,
+        "contrasena": contrasena,
+        "rol": "administrador"
+        }
         
-        guardar_usuarios()
-        print(f"✅ Administrador '{nombre}' registrado correctamente.")
+    guardar_usuarios()
+    print(f"✅ Administrador '{nombre}' registrado correctamente.")
         
