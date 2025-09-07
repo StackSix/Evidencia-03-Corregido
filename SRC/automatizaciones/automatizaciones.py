@@ -1,7 +1,9 @@
 import json
 import os
 from datetime import datetime
-RUTA = os.path.join("data", "automatizaciones.json")
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+RUTA = os.path.join(BASE_DIR, "data", "automatizaciones.json")
 automatizaciones = {}
 
 def validar_dependencias(datos):
@@ -38,6 +40,7 @@ def cargar_automatizaciones():
         automatizaciones = {}
 
 def guardar_automatizaciones():
+    os.makedirs(os.path.dirname(RUTA), exist_ok=True)
     with open(RUTA, "w") as f:
         json.dump(automatizaciones, f, indent=4)
 
