@@ -1,50 +1,60 @@
-from SRC.usuarios.usuarios import registrar_admin_unico
-from SRC.usuarios.usuarios import (
-    cargar_usuarios,
-    registrar_usuario,
-    login,
-    obtener_rol,
-    modificar_rol
-)
-
-from router import menu_usuario, menu_admin
+from SRC.usuarios.usuarios import usuarios, login, registrar_usuario, registrar_admin_unico
+from router import menu_principal
 
 def main():
-    cargar_usuarios()
-
+    print("Bienvenido al Sistema de Gestión")
     while True:
-        print("\n--- INGRESO ---")
-        print("1. Iniciar sesión")
-        print("2. Registrarse como usuario")
-        print("3. Salir")
-        opcion = input("Seleccione una opción: ")
+        if any(u["rol"] == "administrador" for u in usuarios.values()):
+            break  # Ya hay admin, salir del bucle
 
-        if opcion == "1":
-            email = input("Email: ")
-            contraseña = input("Contraseña: ")
-            usuario = login(email, contraseña)
-            if usuario:
-                print(f"\nBienvenido, {usuario['nombre']}! Rol: {usuario['rol']}")
-                if usuario["rol"] == "administrador":
-                    menu_admin(email)
-                else:
-                    menu_usuario(email)
-            else:
-                print("❌ Credenciales incorrectas.")
-        elif opcion == "2":
-            nombre = input("Nombre: ")
-            email = input("Email: ")
-            contraseña = input("Contraseña: ")
-            registrar_usuario(nombre, email, contraseña, rol="usuario")
-        elif opcion == "3":
-            print("¡Gracias por usar nuestro Sistema de Gestión!")
+        print("\n🔒 No hay administrador registrado. Debe crear uno primero.")
+        nombre = input("Nombre del administrador: ").strip()
+        email = input("Email: ").strip()
+        contrasena = input("Contraseña: ").strip()
+        
+        registrar_admin_unico(nombre, email, contrasena)
+        
+        # Verificar si se registró correctamente
+        if any(u["rol"] == "administrador" for u in usuarios.values()):
+            print("✅ Administrador registrado correctamente.")
             break
         else:
-            print("❌ Opción inválida.")
+            print("❌ Intente registrarlo nuevamente.\n")
 
+    while True:
+        print("\nMenú de Ingreso")
+        print("1. Iniciar sesión")
+        print("2. Registrar usuario")
+        print("3. Salir")
+        
+        opcion = input("Seleccione una opción:\n > ").strip()
+        
+        if opcion == "1":
+            print("\nInicio de Sesión")
+            email = input("Email: ").strip()
+            contraseña = input("Contraseña: ").strip()
+            exito = login(email, contraseña)
+            if exito:
+                print(f"✅ Sesión iniciada correctamente. Bienvenido {usuarios[email]['nombre']}!")
+                menu_principal(email)
+            else:
+                print("❌ Email o contraseña incorrectos.")
+
+        elif opcion == "2":
+            print("\nRegistro de usuario")
+            nombre = input("Nombre: ").strip()
+            email = input("Email: ").strip()
+            contraseña = input("Contraseña: ").strip()
+
+            registrar_usuario(nombre, email, contraseña, rol="usuario")
+
+        elif opcion == "3":
+            print("👋 Saliendo del sistema...")
+            break
+
+        else:
+            print("❌ Opción no válida.")
+            
 if __name__ == "__main__":
-    try:
-        registrar_admin_unico()
-        main()
-    except KeyboardInterrupt:
-        print("\n👋 Sistema interrumpido por el usuario.")
+    main()
+            
