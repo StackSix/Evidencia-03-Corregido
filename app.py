@@ -1,31 +1,60 @@
-from SRC.usuarios import usuarios
-from SRC.dispositivos import dispositivos_modulo as dispositivos
-from SRC.menus import ingreso
-import router
-from SRC.dispositivos import dispositivos_modulo as dispositivos
+from SRC.usuarios.usuarios import usuarios, login, registrar_usuario, registrar_admin_unico
+from router import menu_principal
 
+def main():
+    print("Bienvenido al Sistema de Gestión")
+    while True:
+        if any(u["rol"] == "administrador" for u in usuarios.values()):
+            break  # Ya hay admin, salir del bucle
 
-def inicializar_sistema():
-    """Función para inicializar el sistema"""
-    print("Inicializando sistema...")
+        print("\n🔒 No hay administrador registrado. Debe crear uno primero.")
+        nombre = input("Nombre del administrador: ").strip()
+        email = input("Email: ").strip()
+        contrasena = input("Contraseña: ").strip()
+        
+        registrar_admin_unico(nombre, email, contrasena)
+        
+        # Verificar si se registró correctamente
+        if any(u["rol"] == "administrador" for u in usuarios.values()):
+            print("✅ Administrador registrado correctamente.")
+            break
+        else:
+            print("❌ Intente registrarlo nuevamente.\n")
 
-    # Cargar datos desde archivos JSON
-    usuarios.cargar_usuarios()
-    dispositivos.cargar_dispositivos()
+    while True:
+        print("\nMenú de Ingreso")
+        print("1. Iniciar sesión")
+        print("2. Registrar usuario")
+        print("3. Salir")
+        
+        opcion = input("Seleccione una opción:\n > ").strip()
+        
+        if opcion == "1":
+            print("\nInicio de Sesión")
+            email = input("Email: ").strip()
+            contraseña = input("Contraseña: ").strip()
+            exito = login(email, contraseña)
+            if exito:
+                print(f"✅ Sesión iniciada correctamente. Bienvenido {usuarios[email]['nombre']}!")
+                menu_principal(email)
+            else:
+                print("❌ Email o contraseña incorrectos.")
 
-    print("Sistema inicializado correctamente")
+        elif opcion == "2":
+            print("\nRegistro de usuario")
+            nombre = input("Nombre: ").strip()
+            email = input("Email: ").strip()
+            contraseña = input("Contraseña: ").strip()
 
-def ejecutar_aplicacion():
-    """Función principal que ejecuta la aplicación"""
-    try:
-        inicializar_sistema()
-        ingreso.menu_ingreso()
-    except KeyboardInterrupt:
-        print("\n\nPrograma interrumpido por el usuario.")
-    except Exception as e:
-        print(f"\nError inesperado: {e}")
-    finally:
-        print("\n¡Gracias por usar nuestro Sistema de Gestión!")
+            registrar_usuario(nombre, email, contraseña, rol="usuario")
 
+        elif opcion == "3":
+            print("👋 Saliendo del sistema...")
+            break
+
+        else:
+            print("❌ Opción no válida.")
+            
 if __name__ == "__main__":
-    ejecutar_aplicacion()
+    main()
+            
