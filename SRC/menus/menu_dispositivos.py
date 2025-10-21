@@ -1,4 +1,4 @@
-from SRC.dispositivos.dispositivos import agregar_dispositivo, mostrar_todos_dispositivos, modificar_dispositivo, eliminar_dispositivo
+from SRC.dispositivos.dispositivos import dispositivos, agregar_dispositivo, mostrar_todos_dispositivos, modificar_dispositivo, eliminar_dispositivo
 
 def menu_dispositivos(email_admin):
     while True:
@@ -32,6 +32,12 @@ def menu_dispositivos(email_admin):
 
         elif opcion == "3":
             email_usuario = input("Ingrese el email del usuario: ").strip()
+            
+            print(f"\n📋 Dispositivos registrados del usuario {email_usuario}:")
+            for i, (nombre_disp, datos) in enumerate(dispositivos[email_usuario].items(), start=1):
+                estado = "encendido" if datos["estado_disp"] else "apagado"
+                print(f"{i}. {nombre_disp} ({datos['modelo']}) - Estado: {estado}")
+            
             nombre = input("Ingrese el nombre del dispositivo a modificar: ").strip()
             nuevo_modelo = input("Ingrese el nuevo modelo (dejar vacío si no cambia): ").strip()
             estado_input = input("Ingrese el nuevo estado (encendido/apagado, dejar vacío si no cambia): ").strip().lower()

@@ -8,6 +8,10 @@ def main():
             break  # Ya hay admin, salir del bucle
 
         print("\n🔒 No hay administrador registrado. Debe crear uno primero.")
+        print("Por favor, complete los siguientes datos respetando el formato indicado.\n")
+        print("📧 Email: debe tener formato usuario@dominio.com")
+        print("🔑 Contraseña: mínimo 6 caracteres, al menos una letra y un número.")
+        print("👤 Nombre y apellido: mínimo 2 caracteres.\n")
         nombre = input("Nombre del administrador: ").strip()
         email = input("Email: ").strip()
         contrasena = input("Contraseña: ").strip()
@@ -42,6 +46,11 @@ def main():
 
         elif opcion == "2":
             print("\nRegistro de usuario")
+            print("\n=== Registro de nuevo usuario ===")
+            print("Por favor, complete los siguientes datos respetando el formato indicado.\n")
+            print("📧 Email: debe tener formato usuario@dominio.com")
+            print("🔑 Contraseña: mínimo 6 caracteres, al menos una letra y un número.")
+            print("👤 Nombre y apellido: mínimo 2 caracteres.\n")
             nombre = input("Nombre: ").strip()
             email = input("Email: ").strip()
             contraseña = input("Contraseña: ").strip()
