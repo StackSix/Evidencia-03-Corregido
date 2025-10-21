@@ -4,7 +4,7 @@
 
 Esta evidencia corresponde al segundo entregable del proyecto de Aprendizaje Basado en Proyectos (Reentrega de la evidencia-02). 
 
-Tambien corresponde a la entrega de la evidencia-03 con las correxiones pertinentes mencionadas en la devolucion
+Tambien corresponde a la entrega de la evidencia-03 con las correcciones pertinentes mencionadas en la devolucion
 
 
 ## 🧩 Objetivos
@@ -13,61 +13,54 @@ Tambien corresponde a la entrega de la evidencia-03 con las correxiones pertinen
 - Permitir el registro seguro de usuarios con validación de datos.
 - Asegurar la existencia de **un único administrador**.
 - Gestionar automatizaciones predefinidas por usuario/dispositivo.
-- Activar/desactivar el **modo ahorro energético**.
-- Guardar la información en archivos `.json` para persistencia de datos.
-
+- Activar/desactivar **programación horaria**.
 
 ## ⚙️ Funcionalidades Principales
 
 - ✅ Registro de usuarios y autenticación.
-- ✅ Validación de email y contraseña segura (mínimo 8 caracteres, mayúscula, símbolo, sin espacios).
+- ✅ Validación de email (ejemplo@dominio.com) y contraseña segura (mínimo 6 caracteres, mayúscula, símbolo, sin espacios).
 - ✅ Registro **único** de administrador al iniciar el sistema.
-- ✅ Clasificación de dispositivos por tipo (solo cámaras de seguridad momentaneamente trabajamos con un tipo de dispositivo).
-- ✅ Configuración de automatizaciones preestablecidas:
-  - Encendido/Apagado.
-  - Modo de grabación (siempre o por movimiento).
-  - Horario de encendido/apagado automático.
-  - Activar o desactivar notificaciones.
-  - Activar o desactivar detección de movimiento.
-  - Modo ahorro (graba 15 segundos y envía notificación cuando detecta movimiento).
-  - Activación de modo nocturno silencioso.
+- ✅ Clasificación de dispositivos por tipo (cámaras de seguridad o sensores de movimiento, momentaneamente trabajamos con estos tipos de dispositivos).
+- ✅ Configuración interactiva de automatizaciones por parte del usuario:
+  - Horario de encendido y horario de apagado.
+  - Ejecutar acción de la automatización: permite visualizar que realmente funciona.
 - ✅ Gestión de dispositivos por parte del administrador:
-  - Agregar, modificar y eliminar dispositivos de cualquier usuario.
+  - Agregar, mostrar, modificar y eliminar dispositivos de cualquier usuario.
 - ✅ Visualización de automatizaciones activas en dispositivos de los usuarios por parte del administrador.
-- ✅ Configuración interactiva de automatizaciones por parte del usuario.
-- ✅ Guardado y carga automática desde archivos `usuarios.json`, `dispositivos.json` y `automatizaciones.json`.
-
+- ✅ Almacenamiento de datos en estructuras de datos.
 
 ## ⚙️ Funcionalidades Principales
 
 - ✅ Registro de usuarios y dispositivos.
-- ✅ Clasificación de dispositivos por tipo (cámara, sensor, etc.).
-- ✅ Activación interactiva del modo ahorro por cámara.
-- ✅ Guardado y carga automática desde `usuarios.json` y `dispositivos.json`.
+- ✅ Clasificación de dispositivos por tipo (cámara, sensor).
+- ✅ Activación interactiva de la automatización programación horaria por dispositivo.
+- ✅ Datos almacenados en diccionarios alojados en memoria.
 
 
 
-### Registro de dispositivo y activacion de automatizacion (modo de ahorro):
+### Registro de dispositivo y activacion de automatizacion (programación horaria):
 ```bash
-Ingrese el nombre de dispositivo: camara-patio
-Ingrese el modelo de su dispositivo: Tapo C310
-✅ Dispositivo 'camara-patio' agregado correctamente..
+Ingrese el email del usuario al que agregar el dispositivo: nico@hotmail.com
+Nombre del dispositivo: camara
+1. Cámara de seguridad
+2. Sensor de movimiento
+Opción: 1
+Modelo del dispositivo: C01
+✅ Dispositivo 'camara' (cámara de seguridad) agregado correctamente.
 
-Seleccione el dispositivo:
-1. camara-patio
-Seleccione una opción de automatización:
-6. Modo ahorro
-✅ Automatización actualizada correctamente.
+📋 Dispositivos disponibles para automatización:
+1. camara - Estado actual: False
+Seleccione un dispositivo por número: 1
+¿Desea activar la automatización horaria? (s/n): s
+Ingrese el horario de encendido deseado (HH:MM): 18:30
+Ingrese el horario de apagado deseado (HH:MM): 00:30
+✅ La automatización para el 'camara' fue configurada correctamente.
 ```
 
 ### Estructura del proyecto:
 
 ```
-ABP2/
-├── data/
-│   ├── usuarios.json
-│   ├── dispositivos.json
-│   └── automatizaciones.json
+Evidencia-03-Corregido/
 ├── SRC/
 │   ├── usuarios/
 │   │   └── usuarios.py
@@ -75,6 +68,10 @@ ABP2/
 │   │   └── dispositivos.py
 │   ├── automatizaciones/
 │   │   └── automatizaciones.py
+│   └── menus
+│       ├── menu_usuario_estandar.py
+│       ├── menu_usuario_admin.py
+│       └── menu_dispositivos.py
 ├── router.py
 ├── app.py
 └── README.md
@@ -89,78 +86,50 @@ ABP2/
 - Sistema operativo: Windows, Linux o MacOS
 - Editor de texto (opcional): VS Code, Sublime Text, etc.
 
-### 📁 2. Estructura esperada del proyecto
-
-```
-ABP2/
-├── SRC/
-│   ├── usuarios.py
-│   ├── router.py
-│   ├── dispositivos/
-│   │   ├── dispositivos_modulo.py
-│   │   ├── automatizaciones.py
-├── data/             # Carpeta creada pero vacia, aca se crearan automaticamente los archivos JSON
-├── principal.py
-└── README.md
-```
-
-### ▶️ 3. Como ejecutar el programa
+### ▶️ 2. Como ejecutar el programa
 
 Desde la terminal o consola:
 ```bash
-cd ABP2
+cd Evidencia-03-Corregido
 python app.py
 ```
 
-### 🧑‍💻 4. Primer uso - Registro del Administrador
+### 🧑‍💻 3. Primer uso - Registro del Administrador
 
-- Se solicita automáticamente registrar al **primer usuario administrador** y se creara archivo usuarios.JSON.
+- Se solicita automáticamente registrar al **primer usuario** como **administrador**.
 
 #### Validaciones del registro:
 - Email válido
-- Contraseña con mínimo 8 caracteres, al menos una mayúscula, un símbolo y sin espacios
+- Contraseña con mínimo 6 caracteres con letras y números.
 
-### 🔑 5. Iniciar sesión
+### 🔑 4. Iniciar sesión
 
 Después del registro:
 - Iniciar sesión como administrador
-- Registrar usuarios estándar
+- Registrar usuario estándar
 
-### 🧭 6. Funcionalidades para probar
+### 🧭 5. Funcionalidades para probar
 
 #### Como Administrador:
 - Consultar automatizaciones activas de todos los usuarios
-- Agregar/modificar/eliminar dispositivos
-- Configurar automatizaciones avanzadas (modo ahorro, programación horaria, etc.)
+- Gestionar dispositivos: Agregar/mostrar/modificar/eliminar 
+- Modificar rol de usuario
 
 #### Como Usuario Estándar:
 - Ver sus dispositivos
-- Configurar reglas de automatización
-- Activar modo ahorro o activar modo nocturno
+- Activar y configurar automatización
+- Ejecutar acción de la automatización
 
-### 💾 7. Archivos creados automáticamente
+### ✅ 6. Pruebas recomendadas
 
-El sistema genera automáticamente:
-```
-data/
-├── usuarios.json
-├── dispositivos.json
-├── automatizaciones.json
-```
-No es necesario crear manualmente estos archivos.
-
-### ✅ 8. Pruebas recomendadas
-
-- Registrar dispositivo
-- Configurar modo de grabación
-- Programar horarios
-- Activar modo ahorro (respetando restricciones)
-- Activar modo nocturno (respetando exclusión con modo ahorro) (se agrego datetime para verificar superposicion de hora en automatizacion modo ahorro y activacion nocturna silenciosa.)
+- Registrar dispositivo (Admin)
+- Configurar automatización programando horarios (Usuario común o estandar)
+- Ejecutar acción para revisar que este funcionando la programación horaria (Usuario común o estandar)
 
 
 
 ## 📄 Evidencia 03
 La parte escrita se puede descargar en formato PDF desde el siguiente Link:
-[📎 Evidencia PDF](https://drive.google.com/file/d/1K-0RIFLDK6z60dtBWyPIVVxLaynjjlXH/view?usp=sharing)
+[📎 Evidencia PDF](https://drive.google.com/file/d/1bpV9NPMZJu0IPa4T6rpuA-gE6Y6r7RND/view?usp=drive_link)
 
 También se adjuntó el archivo PDF en la entrega a través del aula virtual.
